@@ -8,10 +8,33 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><circle cx=%2220%22 cy=%2220%22 r=%2219%22 fill=%22%232A1414%22/><text x=%2220%22 y=%2228%22 text-anchor=%22middle%22 font-family=%22Georgia,serif%22 font-size=%2220%22 fill=%22%237A3B2B%22>J</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Caveat:wght@600;700&family=Urbanist:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+
+<div id="intro-overlay">
+  <div class="intro-paper" id="intro-paper">
+    <div class="intro-lines">
+      <div class="intro-line line-1">
+        <span class="intro-text">Copy that converts.</span>
+        <svg class="scratch" viewBox="0 0 400 40" preserveAspectRatio="none" aria-hidden="true"><path d="M5,20 Q40,4 80,22 T160,17 T240,25 T320,15 T395,20"/></svg>
+      </div>
+      <div class="intro-line line-2">
+        <span class="intro-text">Words that work.</span>
+        <svg class="scratch" viewBox="0 0 400 40" preserveAspectRatio="none" aria-hidden="true"><path d="M5,18 Q40,30 80,14 T160,23 T240,13 T320,26 T395,17"/></svg>
+      </div>
+      <div class="intro-line line-3">
+        <span class="intro-text">Writing that wins.</span>
+        <svg class="scratch" viewBox="0 0 400 40" preserveAspectRatio="none" aria-hidden="true"><path d="M5,22 Q40,8 80,20 T160,13 T240,27 T320,10 T395,21"/></svg>
+      </div>
+    </div>
+  </div>
+  <div class="intro-signature" aria-hidden="true">
+    <span class="intro-cursive">Jones, do you copy?</span>
+  </div>
+  <button type="button" class="intro-skip" id="intro-skip">Skip intro</button>
+</div>
 
 <header class="site-header">
   <nav class="nav">
@@ -245,5 +268,35 @@
 
 <script src="js/main.js"></script>
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script>
+(function () {
+  var overlay = document.getElementById('intro-overlay');
+  if (!overlay) return;
+
+  var TOTAL_MS = 7900;
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var alreadyPlayed = sessionStorage.getItem('jdyc_intro_played');
+
+  function finishIntro() {
+    overlay.classList.add('intro-hidden');
+    document.body.style.overflow = '';
+    window.clearTimeout(overlay._introTimer);
+  }
+
+  if (reduceMotion || alreadyPlayed) {
+    overlay.classList.add('intro-hidden');
+    return;
+  }
+
+  sessionStorage.setItem('jdyc_intro_played', '1');
+  document.body.style.overflow = 'hidden';
+  overlay._introTimer = window.setTimeout(finishIntro, TOTAL_MS);
+
+  var skipBtn = document.getElementById('intro-skip');
+  if (skipBtn) {
+    skipBtn.addEventListener('click', finishIntro);
+  }
+})();
+</script>
 </body>
 </html>
