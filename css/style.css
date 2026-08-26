@@ -564,7 +564,15 @@ section { padding: 96px 0; }
   color: var(--cream);
   font-family: var(--font-display);
   text-align: center;
-  padding: 30px;
+  overflow: hidden;
+}
+
+.bio-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 15%;
+  border-radius: var(--radius-lg);
 }
 
 .pull-quote {
