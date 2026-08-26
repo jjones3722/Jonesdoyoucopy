@@ -7,16 +7,16 @@
 :root {
   --cream:      #FBF1DC;
   --butter:     #E7D6A6;
-  --gold:       #C9A227;
-  --espresso:   #170D07;
+  --gold:       #EFBF04;
+  --espresso:   #3C1F0F;
 
-  --espresso-soft: #3A2415;
+  --espresso-soft: #5C3317;
   --cream-white:   #FFFDF8;
-  --ink-on-gold:   #170D07;
-  --ink-on-cream:  #170D07;
+  --ink-on-gold:   #3C1F0F;
+  --ink-on-cream:  #3C1F0F;
   --white:         #FFFFFF;
 
-  --font-display: "Italiana", "Bodoni Moda", "Playfair Display", "Georgia", serif;
+  --font-display: "Bodoni Moda", "Playfair Display", "Georgia", serif;
   --font-body: "Montserrat", "Helvetica Neue", Arial, sans-serif;
 
   --max-width: 1180px;
@@ -50,7 +50,7 @@ a { color: inherit; text-decoration: none; }
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 600;
   line-height: 1.15;
   margin: 0 0 0.5em;
   letter-spacing: -0.01em;
@@ -166,7 +166,7 @@ section { padding: 96px 0; }
 
 .logo {
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 600;
   font-size: 1.4rem;
   color: var(--espresso);
   display: flex;
@@ -322,8 +322,8 @@ section { padding: 96px 0; }
   max-width: 300px;
   box-shadow: var(--shadow-card);
   font-family: var(--font-display);
-  font-style: normal;
-  font-weight: 400;
+  font-style: italic;
+  font-weight: 500;
   font-size: 1.25rem;
   line-height: 1.4;
   color: var(--espresso);
@@ -359,7 +359,7 @@ section { padding: 96px 0; }
 }
 .logo-marquee .wordmark {
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 600;
   font-size: 1.25rem;
   color: var(--gold);
   opacity: 0.92;
@@ -380,7 +380,7 @@ section { padding: 96px 0; }
 .stat-num {
   font-family: var(--font-display);
   font-size: clamp(2.2rem, 4.4vw, 3.3rem);
-  font-weight: 400;
+  font-weight: 700;
   color: var(--espresso);
 }
 .stat-label {
@@ -432,7 +432,7 @@ section { padding: 96px 0; }
   color: var(--gold);
   font-family: var(--font-display);
   font-size: 1.8rem;
-  font-weight: 400;
+  font-weight: 600;
   text-align: center;
   padding: 20px;
   position: relative;
@@ -497,8 +497,8 @@ section { padding: 96px 0; }
 .copy-sample .eyebrow { margin-bottom: 0.6em; }
 .copy-sample blockquote {
   font-family: var(--font-display);
-  font-style: normal;
-  font-weight: 400;
+  font-style: italic;
+  font-weight: 500;
   font-size: 1.4rem;
   margin: 0;
   color: var(--espresso);
@@ -568,8 +568,8 @@ section { padding: 96px 0; }
 
 .pull-quote {
   font-family: var(--font-display);
-  font-style: normal;
-  font-weight: 400;
+  font-style: italic;
+  font-weight: 500;
   font-size: 1.65rem;
   color: var(--espresso);
   border-left: 3px solid var(--gold);
@@ -606,7 +606,7 @@ section { padding: 96px 0; }
 .service-card .num {
   font-family: var(--font-display);
   font-size: 2rem;
-  font-weight: 400;
+  font-weight: 700;
   color: var(--gold);
   margin-bottom: 10px;
   display: block;
@@ -632,7 +632,7 @@ section { padding: 96px 0; }
   opacity: 0.7;
   margin-bottom: 6px;
 }
-.contact-info .item a, .contact-info .item p { font-family: var(--font-display); font-size: 1.2rem; margin: 0; }
+.contact-info .item a, .contact-info .item p { font-family: var(--font-display); font-weight: 500; font-size: 1.2rem; margin: 0; }
 
 .form-card {
   background: var(--cream);
