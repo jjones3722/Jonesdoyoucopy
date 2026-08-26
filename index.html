@@ -15,6 +15,8 @@
 
 <div id="intro-overlay">
   <div class="intro-paper" id="intro-paper">
+    <div class="paper-holes" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="paper-margin" aria-hidden="true"></div>
     <div class="intro-lines">
       <div class="intro-line line-1">
         <span class="intro-text">Copy that converts.</span>
@@ -273,7 +275,7 @@
   var overlay = document.getElementById('intro-overlay');
   if (!overlay) return;
 
-  var TOTAL_MS = 7900;
+  var TOTAL_MS = 12600;
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var alreadyPlayed = sessionStorage.getItem('jdyc_intro_played');
 
