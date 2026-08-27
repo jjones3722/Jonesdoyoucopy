@@ -37,6 +37,83 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 2500);
   }
 
+  // Services accordion — click to pin a row open (hover already reveals on desktop).
+  var serviceRows = document.querySelectorAll('.service-row');
+  if (serviceRows.length) {
+    serviceRows.forEach(function (row) {
+      row.addEventListener('click', function () {
+        var wasActive = row.classList.contains('active');
+        serviceRows.forEach(function (r) { r.classList.remove('active'); });
+        if (!wasActive) row.classList.add('active');
+      });
+    });
+  }
+
+  // Animated stat counters — count up from 0 to the real published number
+  // once the stats row scrolls into view. Falls back to the static text
+  // if IntersectionObserver isn't available.
+  var statEls = document.querySelectorAll('.stat-num');
+  if ('IntersectionObserver' in window && statEls.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var statIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        statIO.unobserve(entry.target);
+        var el = entry.target;
+        var raw = el.textContent.trim();
+        var match = raw.match(/^([\d.]+)(.*)$/);
+        if (!match) return;
+        var end = parseFloat(match[1]);
+        var suffix = match[2] || '';
+        var decimals = (match[1].split('.')[1] || '').length;
+        var duration = 1200;
+        var start = null;
+        function step(ts) {
+          if (start === null) start = ts;
+          var progress = Math.min((ts - start) / duration, 1);
+          var eased = 1 - Math.pow(1 - progress, 3);
+          var current = (end * eased).toFixed(decimals);
+          el.textContent = current + suffix;
+          if (progress < 1) {
+            requestAnimationFrame(step);
+          } else {
+            el.textContent = raw;
+          }
+        }
+        requestAnimationFrame(step);
+      });
+    }, { threshold: 0.4 });
+    statEls.forEach(function (el) { statIO.observe(el); });
+  }
+
+  // Delicate scroll parallax — case-study imagery skews slightly with scroll
+  // velocity, then eases back to flat. Skipped for reduced-motion users.
+  var skewTargets = document.querySelectorAll('.case-cover, .case-gallery img');
+  if (skewTargets.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var lastY = window.scrollY;
+    var currentSkew = 0;
+    var skewRunning = false;
+    function updateSkew() {
+      var y = window.scrollY;
+      var delta = y - lastY;
+      lastY = y;
+      var target = Math.max(-4, Math.min(4, delta * 0.5));
+      currentSkew += (target - currentSkew) * 0.15;
+      if (Math.abs(currentSkew) > 0.03) {
+        skewTargets.forEach(function (el) { el.style.transform = 'skewY(' + currentSkew.toFixed(2) + 'deg)'; });
+        requestAnimationFrame(updateSkew);
+      } else {
+        skewTargets.forEach(function (el) { el.style.transform = ''; });
+        skewRunning = false;
+      }
+    }
+    window.addEventListener('scroll', function () {
+      if (!skewRunning) {
+        skewRunning = true;
+        requestAnimationFrame(updateSkew);
+      }
+    }, { passive: true });
+  }
+
   // Contact form (static site — no backend). Prevent silent no-op submit.
   var form = document.querySelector('.js-contact-form');
   if (form) {
