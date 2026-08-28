@@ -571,6 +571,68 @@ section { padding: 96px 0; }
 .card-link svg { width: 14px; height: 14px; transition: transform 0.25s var(--ease); }
 .card:hover .card-link svg { transform: translateX(4px); }
 
+/* ---------- Scroll story (pinned image, swapping chapters) ---------- */
+
+.scroll-story {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 56px;
+  margin: 8px 0 64px;
+}
+.scroll-story .story-media {
+  position: sticky;
+  top: 100px;
+  height: 440px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  background: var(--espresso);
+  align-self: start;
+}
+.scroll-story .story-media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.7s var(--ease);
+}
+.scroll-story .story-media img.active { opacity: 1; }
+.scroll-story .story-chapters {
+  display: flex;
+  flex-direction: column;
+  gap: 26vh;
+  padding: 12px 0;
+}
+.scroll-story .chapter .chapter-num {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  color: var(--espresso-soft);
+  opacity: 0.55;
+  margin-bottom: 10px;
+}
+.scroll-story .chapter h4 {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.6vw, 1.7rem);
+  margin-bottom: 12px;
+}
+.scroll-story .chapter p { color: var(--espresso-soft); }
+@media (max-width: 860px) {
+  .scroll-story { grid-template-columns: 1fr; gap: 0; }
+  .scroll-story .story-media {
+    position: relative;
+    top: 0;
+    height: 280px;
+    margin-bottom: 28px;
+  }
+  .scroll-story .story-media img.active { position: static; opacity: 1; }
+  .scroll-story .story-media img:not(.active) { display: none; }
+  .scroll-story .story-chapters { gap: 40px; }
+}
+
 /* ---------- Case study gallery / cover ---------- */
 
 .case-cover {
@@ -594,6 +656,10 @@ section { padding: 96px 0; }
   object-fit: cover;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .case-gallery img { transform: none !important; }
 }
 .case-gallery .tall { grid-row: span 2; }
 @media (max-width: 860px) {

@@ -37,6 +37,29 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 2500);
   }
 
+  // Scroll story — a sticky image panel that swaps as each chapter of text
+  // scrolls through the center of the viewport (Brief / Approach / Result).
+  var stories = document.querySelectorAll('.scroll-story');
+  if (stories.length) {
+    stories.forEach(function (story) {
+      var imgs = story.querySelectorAll('.story-media img');
+      var chapters = story.querySelectorAll('.chapter');
+      if (!imgs.length || !chapters.length) return;
+      if (!('IntersectionObserver' in window)) {
+        imgs[0].classList.add('active');
+        return;
+      }
+      var storyIO = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          var idx = Array.prototype.indexOf.call(chapters, entry.target);
+          imgs.forEach(function (im, i) { im.classList.toggle('active', i === idx); });
+        });
+      }, { threshold: 0.01, rootMargin: '-45% 0px -45% 0px' });
+      chapters.forEach(function (ch) { storyIO.observe(ch); });
+    });
+  }
+
   // Services accordion — click to pin a row open (hover already reveals on desktop).
   var serviceRows = document.querySelectorAll('.service-row');
   if (serviceRows.length) {
@@ -85,33 +108,36 @@ document.addEventListener('DOMContentLoaded', function () {
     statEls.forEach(function (el) { statIO.observe(el); });
   }
 
-  // Delicate scroll parallax — case-study imagery skews slightly with scroll
-  // velocity, then eases back to flat. Skipped for reduced-motion users.
-  var skewTargets = document.querySelectorAll('.case-cover, .case-gallery img');
-  if (skewTargets.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    var lastY = window.scrollY;
-    var currentSkew = 0;
-    var skewRunning = false;
-    function updateSkew() {
-      var y = window.scrollY;
-      var delta = y - lastY;
-      lastY = y;
-      var target = Math.max(-4, Math.min(4, delta * 0.5));
-      currentSkew += (target - currentSkew) * 0.15;
-      if (Math.abs(currentSkew) > 0.03) {
-        skewTargets.forEach(function (el) { el.style.transform = 'skewY(' + currentSkew.toFixed(2) + 'deg)'; });
-        requestAnimationFrame(updateSkew);
-      } else {
-        skewTargets.forEach(function (el) { el.style.transform = ''; });
-        skewRunning = false;
-      }
+  // Scroll tilt — each gallery image rotates based on its own position in
+  // the viewport: tilted one way entering, flat at center, tilted the other
+  // way leaving. Driven by scroll position (not velocity), matching a
+  // reference recording of the tilt effect. Skipped for reduced-motion users.
+  var tiltTargets = document.querySelectorAll('.case-gallery img');
+  if (tiltTargets.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var MAX_TILT = 7; // degrees
+    var tiltTicking = false;
+    function updateTilt() {
+      var vh = window.innerHeight;
+      var center = vh / 2;
+      tiltTargets.forEach(function (el) {
+        var rect = el.getBoundingClientRect();
+        if (rect.bottom < -200 || rect.top > vh + 200) return; // skip far offscreen
+        var elCenter = rect.top + rect.height / 2;
+        var normalized = (elCenter - center) / center; // -1 (top) .. 1 (bottom)
+        normalized = Math.max(-1, Math.min(1, normalized));
+        var angle = normalized * MAX_TILT;
+        el.style.transform = 'rotate(' + angle.toFixed(2) + 'deg)';
+      });
+      tiltTicking = false;
     }
+    updateTilt();
     window.addEventListener('scroll', function () {
-      if (!skewRunning) {
-        skewRunning = true;
-        requestAnimationFrame(updateSkew);
+      if (!tiltTicking) {
+        tiltTicking = true;
+        requestAnimationFrame(updateTilt);
       }
     }, { passive: true });
+    window.addEventListener('resize', updateTilt);
   }
 
   // Contact form (static site — no backend). Prevent silent no-op submit.
