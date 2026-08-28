@@ -108,36 +108,42 @@ document.addEventListener('DOMContentLoaded', function () {
     statEls.forEach(function (el) { statIO.observe(el); });
   }
 
-  // Scroll tilt — each gallery image rotates based on its own position in
-  // the viewport: tilted one way entering, flat at center, tilted the other
-  // way leaving. Driven by scroll position (not velocity), matching a
-  // reference recording of the tilt effect. Skipped for reduced-motion users.
-  var tiltTargets = document.querySelectorAll('.case-gallery img');
-  if (tiltTargets.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    var MAX_TILT = 7; // degrees
-    var tiltTicking = false;
-    function updateTilt() {
-      var vh = window.innerHeight;
-      var center = vh / 2;
-      tiltTargets.forEach(function (el) {
-        var rect = el.getBoundingClientRect();
-        if (rect.bottom < -200 || rect.top > vh + 200) return; // skip far offscreen
-        var elCenter = rect.top + rect.height / 2;
-        var normalized = (elCenter - center) / center; // -1 (top) .. 1 (bottom)
-        normalized = Math.max(-1, Math.min(1, normalized));
-        var angle = normalized * MAX_TILT;
-        el.style.transform = 'rotate(' + angle.toFixed(2) + 'deg)';
-      });
-      tiltTicking = false;
-    }
-    updateTilt();
-    window.addEventListener('scroll', function () {
-      if (!tiltTicking) {
-        tiltTicking = true;
-        requestAnimationFrame(updateTilt);
+  // Venetian blind reveal — each case-study gallery image is wrapped in a
+  // set of horizontal slats that open once, the first time the image
+  // scrolls into view (replaces an earlier continuous scroll-tilt effect).
+  var blindImgs = document.querySelectorAll('.case-gallery img');
+  if (blindImgs.length) {
+    var SLAT_COUNT = 8;
+    blindImgs.forEach(function (img) {
+      var wrapper = document.createElement('div');
+      wrapper.className = 'blind-reveal';
+      if (img.classList.contains('tall')) wrapper.classList.add('tall');
+      img.parentNode.insertBefore(wrapper, img);
+      wrapper.appendChild(img);
+      for (var i = 0; i < SLAT_COUNT; i++) {
+        var slat = document.createElement('span');
+        slat.className = 'blind-slat';
+        slat.style.top = (i * (100 / SLAT_COUNT)) + '%';
+        slat.style.height = (100 / SLAT_COUNT) + '%';
+        slat.style.transitionDelay = (i * 0.045) + 's';
+        wrapper.appendChild(slat);
       }
-    }, { passive: true });
-    window.addEventListener('resize', updateTilt);
+    });
+
+    var blindWrappers = document.querySelectorAll('.blind-reveal');
+    if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      var blindIO = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('open');
+            blindIO.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.35 });
+      blindWrappers.forEach(function (w) { blindIO.observe(w); });
+    } else {
+      blindWrappers.forEach(function (w) { w.classList.add('open'); });
+    }
   }
 
   // Contact form (static site — no backend). Prevent silent no-op submit.
