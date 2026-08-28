@@ -146,6 +146,43 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  // Lightbox — click any content image (case galleries, case covers,
+  // before/after cards) to expand it full-size. Images inside a link
+  // (portfolio cards) are left alone so navigation still works.
+  var lightboxImgs = document.querySelectorAll('.case-gallery img, .case-cover, .ba-card img');
+  if (lightboxImgs.length) {
+    var lbOverlay = document.createElement('div');
+    lbOverlay.className = 'lightbox-overlay';
+    lbOverlay.innerHTML = '<button type="button" class="lightbox-close" aria-label="Close">&times;</button><img alt="">';
+    document.body.appendChild(lbOverlay);
+    var lbImg = lbOverlay.querySelector('img');
+
+    function openLightbox(src, alt) {
+      lbImg.src = src;
+      lbImg.alt = alt || '';
+      lbOverlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      lbOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    lightboxImgs.forEach(function (img) {
+      if (img.closest('a')) return;
+      img.classList.add('lightbox-enabled');
+      img.addEventListener('click', function () {
+        openLightbox(img.currentSrc || img.src, img.alt);
+      });
+    });
+    lbOverlay.addEventListener('click', function (e) {
+      if (e.target === lbOverlay) closeLightbox();
+    });
+    lbOverlay.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeLightbox();
+    });
+  }
+
   // Contact form (static site — no backend). Prevent silent no-op submit.
   var form = document.querySelector('.js-contact-form');
   if (form) {
