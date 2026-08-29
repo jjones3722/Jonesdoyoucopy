@@ -178,12 +178,12 @@ section { padding: 96px 0; }
 .logo svg { width: 26px; height: 26px; }
 
 .logo-img {
-  height: 34px;
+  height: 62px;
   width: auto;
   display: block;
 }
 @media (max-width: 520px) {
-  .logo-img { height: 28px; }
+  .logo-img { height: 46px; }
 }
 
 .logo .tagline {
