@@ -118,6 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var wrapper = document.createElement('div');
       wrapper.className = 'blind-reveal';
       if (img.classList.contains('tall')) wrapper.classList.add('tall');
+      if (img.classList.contains('portrait')) wrapper.classList.add('portrait');
       img.parentNode.insertBefore(wrapper, img);
       wrapper.appendChild(img);
       for (var i = 0; i < SLAT_COUNT; i++) {
