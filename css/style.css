@@ -1213,8 +1213,10 @@ section { padding: 96px 0; }
 .footer-brand p { color: var(--butter); opacity: 0.7; max-width: 34ch; margin-top: 14px; font-size: 0.9rem; }
 .footer-cols { display: flex; gap: 60px; flex-wrap: wrap; }
 .footer-col h4 { font-family: var(--font-body); font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--butter); margin-bottom: 16px; }
-.footer-col a, .footer-col p { display: block; color: var(--butter); opacity: 0.85; font-size: 0.92rem; margin-bottom: 10px; }
-.footer-col a:hover { opacity: 1; color: var(--cream); text-decoration: underline; }
+.footer-col a, .footer-col p { display: block; font-size: 0.92rem; margin-bottom: 10px; }
+.footer-col a { color: var(--cream); opacity: 1; }
+.footer-col p { color: var(--butter); opacity: 0.85; }
+.footer-col a:hover { color: var(--cream-white); text-decoration: underline; }
 .footer-bottom {
   border-top: 1px solid rgba(185, 122, 90, 0.18);
   padding-top: 24px;
