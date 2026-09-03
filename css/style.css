@@ -152,9 +152,22 @@ section { padding: 96px 0; }
   position: sticky;
   top: 0;
   z-index: 100;
+  border-bottom: 1px solid rgba(42, 20, 20, 0.08);
+}
+
+/* Blur lives on a pseudo-element, not on .site-header itself, because
+   backdrop-filter on an ancestor creates a new containing block for any
+   position:fixed descendant (the mobile nav-links overlay below). That
+   was pinning the fixed mobile menu to the header's own short box instead
+   of the full viewport, which broke the mobile nav and caused sitewide
+   horizontal overflow on small screens. */
+.site-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   background: rgba(251, 246, 242, 0.88);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(42, 20, 20, 0.08);
 }
 
 .nav {
